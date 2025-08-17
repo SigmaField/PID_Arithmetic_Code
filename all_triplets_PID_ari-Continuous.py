@@ -35,8 +35,8 @@ def main():
     parser.add_argument("-stageid",help='stage of the experiment, can be 1 for rest or 2 for task',choices=["1","2"])
     parser.add_argument("-surrogates",help='wether to do the PID analysis on original data or on Cholesky surrogates',choices=["yes","no"])    
     parser.add_argument("-samplesize",help='number of surrogate samples')
-    parser.add_argument('-datafolder', default="C:\\Users\\rober\\NeuNet\\ArithmeticTasks\\data\\", help='path of raw data')
-    parser.add_argument('-resultsfolder', default="C:\\Users\\rober\\NeuNet\\ArithmeticTasks\\resultsPID\\", help='path for PID analysis results')
+    parser.add_argument('-datafolder',    default="G:\\My Drive\\data_research\\NeuNet\\PID_Arithmetic\\data\\", help='path of raw data')
+    parser.add_argument('-resultsfolder', default="G:\\My Drive\\data_research\\NeuNet\\PID_Arithmetic\\resultsPID\\", help='path for PID analysis results')
     args  = parser.parse_args()
     stage =  "rest" if args.stageid  == "1" else "task"
     Path(args.resultsfolder+"\\rest").mkdir(exist_ok=True)
