@@ -79,7 +79,7 @@ def add_noise(x, rng, noise_type='uniform', amplitude=1e-10):
     return x
 
 
-def compute_mi(x, y, n_neighbors=3, noise_type=None):
+def compute_mi(x, y, n_neighbors=3, noise_type=None)->float:
     """Compute mutual information between two continuous variables.
 
     :param x: real ndarray, shape (n_samples,) or (n_samples, n_features)

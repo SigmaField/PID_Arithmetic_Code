@@ -18,7 +18,7 @@ right_triplets = [list(triplet) for triplet in combinations(right_channels,3)]
 def str_to_int_list(input_string):
     return [int(item) for item in input_string.split(',')]
 
-def analyze_and_store_results(continuous_data_df:pd.DataFrame, results:Dict, path:str)-> NoReturn:
+def analyze_and_store_results(continuous_data_df:pd.DataFrame, results:Dict, path:str)-> None:
     print("Computing PID on LEFT hemisphere...")
     print("")
     for triplet in tqdm(left_triplets):

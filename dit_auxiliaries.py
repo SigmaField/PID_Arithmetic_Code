@@ -65,11 +65,11 @@ def triplet_pid_to_csv(data: pd.DataFrame, triplet:frozenset, savepath:str) -> N
     channel_names = list(triplet)
     channel0_data, channel1_data, channel2_data = data[channel_names].to_numpy().T 
    
-    distro1         = boolean_joint_distribution(channel0_data,channel1_data,channel2_data)
+    distro1      = boolean_joint_distribution(channel0_data,channel1_data,channel2_data)
     permutation1 = channel_names[0] + "," + channel_names[1] + "-" + channel_names[2]
-    distro2         = boolean_joint_distribution(channel0_data,channel2_data,channel1_data)
+    distro2      = boolean_joint_distribution(channel0_data,channel2_data,channel1_data)
     permutation2 = channel_names[0] + "," + channel_names[2] + "-" + channel_names[1]
-    distro3         = boolean_joint_distribution(channel1_data,channel2_data,channel0_data)
+    distro3      = boolean_joint_distribution(channel1_data,channel2_data,channel0_data)
     permutation3 = channel_names[1] + "," + channel_names[2] + "-" + channel_names[0]
 
     with open(savepath+'_'+permutation1+".txt", "w") as text_file:
@@ -121,7 +121,6 @@ def generate_surrogates(data_df:pd.DataFrame) -> pd.DataFrame:
     Returns:
         surrogate_df: a dataframe containing the Cholesky surrogates
     """
-    """
     def cholesky_surrogates(series):
         s = np.copy(series)
 
@@ -133,7 +132,6 @@ def generate_surrogates(data_df:pd.DataFrame) -> pd.DataFrame:
         c             = cholesky(pearson_corr, lower=True)
         choles        = np.dot(c, x)
         return choles
-    """
     def gaussian_cholesky_surrogates(series):
         pearson_corr  = np.corrcoef(series)
         x             = np.random.normal(size=series.shape)

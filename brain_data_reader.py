@@ -1,6 +1,6 @@
-import mne
 import pandas as pd
 import numpy  as np
+import mne
 
 def load_subjet_data(path: str) -> pd.DataFrame:
     """
