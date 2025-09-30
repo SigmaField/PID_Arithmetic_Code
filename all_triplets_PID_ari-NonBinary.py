@@ -4,7 +4,6 @@ from dit_auxiliaries   import pid_row,pid_row_nonbinary,generate_surrogates,symb
 from brain_data_reader import load_subjet_data, only_useful_data
 import argparse
 import pandas as pd
-from typing import Dict,NoReturn
 from tqdm import tqdm
 import time
 
@@ -17,19 +16,16 @@ right_triplets = [list(triplet) for triplet in combinations(right_channels,3)]
 def str_to_int_list(input_string):
     return [int(item) for item in input_string.split(',')]
 
-def analyze_and_store_results(continuous_data_df:pd.DataFrame, results:list, path:str)-> NoReturn:
-    print("symbolizing...",end="")
+def analyze_and_store_results(continuous_data_df:pd.DataFrame, results:dict, path:str)-> None:
     symbolic_data = symbolize(continuous_data_df,[20,40,60,80])
-    print("done\n\ncomputing PID on LEFT hemisphere...")
+    print("done computing PID on LEFT hemisphere...")
 
     for triplet in tqdm(left_triplets):
        pid_row_nonbinary(symbolic_data, triplet, results)
-    print("\ndone\n\ncomputing PID on RIGHT hemisphere...")
+    print("done computing PID on RIGHT hemisphere...")
     
-    print("")
     for triplet in tqdm(right_triplets):
        pid_row_nonbinary(symbolic_data, triplet, results)    
-    print("\ndone")
     pd.DataFrame(results).to_csv(path)    
 
 def main():
@@ -59,11 +55,11 @@ def main():
             for n in range(samplesize):
                 results         = {'source1':[],'source2':[],'target' :[],'sinergy':[],'unique1':[],'unique2':[],'redundancy':[]}
                 print("\nCurrently processing surrogate #"+str(n))
-                surrogates_path = args.resultsfolder  + stage + '_surrogates' +'\\Subject' + str(ID) + "_PID_" + stage + "_surrogate"+str(n)+"_128Hz_NonBinary_5symbols.csv"
+                surrogates_path = args.resultsfolder  + stage + '_surrogates' +'\\nonbinary\\Subject' + str(ID) + "_PID_" + stage + "_surrogate"+str(n)+"_128Hz_NonBinary_5symbols.csv"
                 analyze_and_store_results(generate_surrogates(useful_raw_data), results, surrogates_path)
         else:
             results         = {'source1':[],'source2':[],'target' :[],'sinergy':[],'unique1':[],'unique2':[],'redundancy':[]}
-            result_path     = args.resultsfolder  + stage + '\\Subject' + str(ID) + "_PID_" + stage + "_128Hz_NonBinary_10symbols.csv"
+            result_path     = args.resultsfolder  + stage +'\\nonbinary\\Subject' + str(ID) + "_PID_" + stage + "_128Hz_NonBinary_5symbols.csv"
             analyze_and_store_results(useful_raw_data, results, result_path)
 
         print('\nFinished!\n\n')
@@ -71,5 +67,6 @@ def main():
     print("ELAPSED TIME:",(end-start)/60)
 if __name__ == "__main__":
     main()
+
 
 

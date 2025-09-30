@@ -3,7 +3,6 @@ from itertools         import combinations
 from pid_auxiliaries   import pid_row_continuous,generate_surrogates
 
 from brain_data_reader import load_subjet_data, only_useful_data
-from typing            import Dict,NoReturn
 from tqdm              import tqdm
 import pandas          as     pd
 import argparse
@@ -18,16 +17,15 @@ right_triplets = [list(triplet) for triplet in combinations(right_channels,3)]
 def str_to_int_list(input_string):
     return [int(item) for item in input_string.split(',')]
 
-def analyze_and_store_results(continuous_data_df:pd.DataFrame, results:Dict, path:str)-> None:
-    print("Computing PID on LEFT hemisphere...")
-    print("")
+def analyze_and_store_results(continuous_data_df:pd.DataFrame, results:dict, path:str)-> None:
     for triplet in tqdm(left_triplets):
        pid_row_continuous(continuous_data_df, triplet, results)
-    print("Computing PID on RIGHT hemisphere...")
-    print("")
+
     for triplet in tqdm(right_triplets):
        pid_row_continuous(continuous_data_df, triplet, results)    
+
     pd.DataFrame(results).to_csv(path)    
+    return
 
 def main():
     parser     = argparse.ArgumentParser()

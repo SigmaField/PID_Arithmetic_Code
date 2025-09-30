@@ -61,12 +61,9 @@ def pid_analytical(data: pd.DataFrame, triplet:list[str],  MIs:dict[frozenset[st
 
 
 def compute_and_store_analytical_results(data_df:pd.DataFrame, left_triplets:list, right_triplets:list, left_MIs:Dict[frozenset[str],float], right_MIs:Dict[frozenset[str],float], results:dict, path:str)-> None:
-    print("Computing PID on LEFT hemisphere...")
-    print("")
     for triplet in left_triplets:
        pid_analytical(data_df, triplet, left_MIs,results)
-    print("Computing PID on RIGHT hemisphere...")
-    print("")
+
     for triplet in right_triplets:
        pid_analytical(data_df, triplet, right_MIs,results)    
     pd.DataFrame(results).to_csv(path)    

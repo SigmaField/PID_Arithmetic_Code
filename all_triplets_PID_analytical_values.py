@@ -23,6 +23,7 @@ def get_file_paths_from_config():
   data_path    = config.get('DEFAULT', 'data_path')
   results_path = config.get('DEFAULT', 'results_path')
   return data_path,results_path
+
 def str_to_int_list(input_string):
     return [int(item) for item in input_string.split(',')]
 
@@ -31,6 +32,7 @@ def main():
     parser.add_argument('-subjectids', type=str_to_int_list, help='List of integers separated by commas')
     parser.add_argument("-stageid",help='stage of the experiment, can be 1 for rest or 2 for task',choices=["1","2"])
     args  = parser.parse_args()
+
     data_folder, rslts_folder =  get_file_paths_from_config()
    
     Path(rslts_folder+"\\rest").mkdir(exist_ok=True)

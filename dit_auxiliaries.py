@@ -1,16 +1,16 @@
 import dit
 import numpy  as np
 import pandas as pd
-from typing import Dict,NoReturn
+from typing import Dict
 from scipy.linalg import cholesky
 
 def symbolize(data:pd.DataFrame,pctls:list[int]) -> pd.DataFrame:
     """
     Discretizes each EEG channel data by binning the continuous values according to a given set of percentile values that function as catagories
        Parameters:
-           data: data frame with EEG channels data
+           data: data frame with raw EEG data
         Returns:
-            symbolic_data: Dataframe with discretized EEG channels data.
+            symbolic_data: Dataframe with discretized EEG data.
     """
     
     symbolic_data = data.copy(deep=True)
@@ -39,7 +39,7 @@ def boolean_joint_distribution(*random_variates):
     Returns:
         distribution: a 'dit' Distribution object representing the joint distribution of 'variables'
     """
-    def joint_symbols_to_string(bits:np.ndarray[np.int32])->str:
+    def joint_symbols_to_string(bits:np.ndarray)->str:
         return np.array2string(bits,separator='')[1:-1]
     joint_symbols,frequencies = np.unique(list(zip(*random_variates)), axis=0, return_counts=True)
     symbol_strings            = list(map(joint_symbols_to_string,joint_symbols))
@@ -61,7 +61,7 @@ def read_pid_table(pid_table: str) -> Dict[str,float]:
         pid_dict[contents[1].strip()] = float(contents[3])
     return pid_dict
 
-def triplet_pid_to_csv(data: pd.DataFrame, triplet:frozenset, savepath:str) -> NoReturn:
+def triplet_pid_to_csv(data: pd.DataFrame, triplet:frozenset, savepath:str) -> None:
     channel_names = list(triplet)
     channel0_data, channel1_data, channel2_data = data[channel_names].to_numpy().T 
    
@@ -80,7 +80,7 @@ def triplet_pid_to_csv(data: pd.DataFrame, triplet:frozenset, savepath:str) -> N
         text_file.write(dit.pid.PID_WB(distro3).to_string())
     return
 
-def pid_row(data: pd.DataFrame, triplet:list, results:Dict[str,list]) -> NoReturn:
+def pid_row(data: pd.DataFrame, triplet:list, results:Dict[str,list]) -> None:
     rvs      = data[triplet].to_numpy().T 
     def fill_row(i,j,k):
         distro = boolean_joint_distribution(rvs[i],rvs[j],rvs[k])
@@ -97,7 +97,7 @@ def pid_row(data: pd.DataFrame, triplet:list, results:Dict[str,list]) -> NoRetur
     fill_row(1,2,0)
     return 
     
-def pid_row_nonbinary(data: pd.DataFrame, triplet:list, results:Dict[str,list]) -> NoReturn:
+def pid_row_nonbinary(data: pd.DataFrame, triplet:list, results:Dict[str,list]) -> None:
     rvs = data[triplet].to_numpy().T 
     def fill_row(i,j,k):
         pid    = partial_info_decomp(rvs[i],rvs[j],rvs[k])
@@ -121,7 +121,7 @@ def generate_surrogates(data_df:pd.DataFrame) -> pd.DataFrame:
     Returns:
         surrogate_df: a dataframe containing the Cholesky surrogates
     """
-    def cholesky_surrogates(series):
+    def permutation_cholesky_surrogates(series):
         s = np.copy(series)
 
         for i in range(len(s)):
@@ -142,8 +142,7 @@ def generate_surrogates(data_df:pd.DataFrame) -> pd.DataFrame:
         rng   = np.random.default_rng()
         return rng.permuted(series, axis=1)
     data_array      = data_df.to_numpy()
-    surrogate_array = gaussian_cholesky_surrogates(data_array.T)
-#    surrogate_array = random_permutation_surrogates(data_array.T)
+    surrogate_array = gaussian_cholesky_surrogates(data_array.T)#surrogate_array = random_permutation_surrogates(data_array.T)
     surrogate_df    = pd.DataFrame(surrogate_array.T,columns=data_df.columns)
     return surrogate_df
 
